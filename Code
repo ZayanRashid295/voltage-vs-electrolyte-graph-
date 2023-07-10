@@ -1,0 +1,53 @@
+%% Final Code
+% Electrode area in cm^2
+A_ss = 109.42; % Stainless steel
+A_ti = 64.95;  % Titanium paper
+A_nf = 64.95;  % Nickel foam
+
+% Electrode thickness in cm
+t_ss = 0.2; % Stainless steel
+t_ti = 0.1; % Titanium paper
+t_nf = 0.3; % Nickel foam
+
+% Electrolyte properties
+KOH_conc = 0.28; % Concentration of KOH in wt.%
+rho_KOH = 1.05;  % Density of KOH electrolyte in g/cm^3
+
+% Electrode properties
+rho_ss = 7.8; % Density of stainless steel in g/cm^3
+rho_ti = 4.5; % Density of titanium paper in g/cm^3
+rho_nf = 0.2; % Density of nickel foam in g/cm^3
+
+% Current density range in A/cm^2
+j_min = 0.1;
+j_max = 2;
+delta_j = 0.1;
+j = j_min:delta_j:j_max;
+
+% Calculate the voltage and electrolyte use over the range of current densities for each electrode material
+% Stainless steel
+eta_ss = 1.498 + 0.0075*j + 0.000003*j.^2;
+V_ss = (eta_ss + 0.016)*t_ss./(rho_ss*A_ss);
+V_ss_el = V_ss./(rho_KOH*t_ss*A_ss);
+
+% Titanium paper
+eta_ti = 1.469 + 0.019*j + 0.00005*j.^2;
+V_ti = (eta_ti + 0.013)*t_ti./(rho_ti*A_ti);
+V_ti_el = V_ti./(rho_KOH*t_ti*A_ti);
+
+% Nickel foam
+eta_nf = 1.287 + 0.051*j - 0.0005*j.^2;
+V_nf = (eta_nf + 0.009)*t_nf./(rho_nf*A_nf);
+V_nf_el = V_nf./(rho_KOH*t_nf*A_nf);
+
+% Plot the voltage vs. electrolyte use curves for each electrode material
+figure;
+plot(V_ss_el, V_ss, '-r', 'LineWidth', 2);
+hold on;
+plot(V_ti_el, V_ti, '-b', 'LineWidth', 2);
+plot(V_nf_el, V_nf, '-g', 'LineWidth', 2);
+xlabel('Electrolyte use (g/cm^2)', 'FontSize', 14);
+ylabel('Voltage (V)', 'FontSize', 14);
+legend('Stainless steel', 'Titanium paper', 'Nickel foam', 'Location', 'Northwest');
+title('Voltage vs. Electrolyte use for alkaline electrolyser', 'FontSize', 16);
+grid on;
